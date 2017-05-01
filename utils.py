@@ -778,7 +778,7 @@ class ColadeCoste(Queue):
 
 
     def pop(self):
-        self.A.sort(key=lambda item: item.path_cost)
+        self.A.sort(key=lambda item: item.estimacion)
         e = self.A[self.start]
         self.start += 1
         if self.start > 5 and self.start > len(self.A) / 2:

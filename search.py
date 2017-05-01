@@ -53,6 +53,8 @@ class Problem:
         abstract
 
 
+
+
 # ______________________________________________________________________________
 
 class Node:
@@ -65,10 +67,10 @@ class Node:
     an explanation of how the f and h values are handled. You will not need to
     subclass this class."""
 
-    def __init__(self, state, parent=None, action=None, path_cost=0):
+    def __init__(self, state, parent=None, action=None, path_cost=0, estimacion=None):
         """Create a search tree Node, derived from a parent by an action."""
         update(self, state=state, parent=parent, action=action,
-               path_cost=path_cost, depth=0)
+               path_cost=path_cost, depth=0, estimacion=estimacion)
         if parent:
             self.depth = parent.depth + 1
 
@@ -86,7 +88,7 @@ class Node:
     def expand(self, problem):
         """Return a list of nodes reachable from this node. [Fig. 3.8]"""
         return [Node(next, self, act,
-                     problem.path_cost(self.path_cost, self.state, act, next))
+                     problem.path_cost(self.path_cost, self.state, act, next),problem.path_cost(self.path_cost, self.state, act, next)+problem.h(Node(next)))
                 for (act, next) in problem.successor(self.state)]
 
 
@@ -122,15 +124,15 @@ def graph_search(problem, fringe):
     """Search through the successors of a problem to find a goal.
     The argument fringe should be an empty queue.
     If two paths reach a state, only use the best one. [Fig. 3.18]"""
-    closed = {}
+    #closed = {}
     fringe.append(Node(problem.initial))
     while fringe:
         node = fringe.pop()
         if problem.goal_test(node.state):
             return node
-        if node.state not in closed:
-            closed[node.state] = True
-            fringe.extend(node.expand(problem))
+        #if node.state not in closed:
+            #closed[node.state] = True
+        fringe.extend(node.expand(problem))
     return None
 
 
